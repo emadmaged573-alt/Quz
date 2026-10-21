@@ -22,6 +22,7 @@ const initData = {
 
 function App() {
   const [view, setView] = useState('home');
+  const [tPass, setTPass] = useState(''); const [tErr, setTErr] = useState(false);
   const [sCode, setSCode] = useState(''); const [sErr, setSErr] = useState('');
   const [stus, setStus] = useState(() => JSON.parse(localStorage.getItem('eq_s')) || initData.stus);
   const [less, setLess] = useState(() => JSON.parse(localStorage.getItem('eq_l')) || initData.less);
@@ -52,20 +53,23 @@ function App() {
           ) : (
             <div class="flex space-x-2 space-x-reverse">
               <button onClick={() => setView('s-login')} class="bg-indigo-600 text-xs px-3 py-1.5 rounded-lg font-bold">دخول الطلاب</button>
-              <button onClick={() => setView('t-dash')} class="bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 text-xs px-3 py-1.5 rounded-lg font-bold">لوحة المعلم 🔒</button>
+              <button onClick={() => setView('t-login')} class="bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 text-xs px-3 py-1.5 rounded-lg font-bold">لوحة المعلم 🔒</button>
             </div>
           )}
         </div>
       </header>
 
-      <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow">
+      <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow space-y-6">
         {view === 'home' && (
           <div class="space-y-6">
+            {/* Hero Section */}
             <div class="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 text-center space-y-3">
-              <span class="text-xs text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full">المنصة الأولى للتميز في اللغة الإنجليزية</span>
+              <span class="text-xs text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full font-bold">هدفنا: الفل مارك فقط لا غير 💯</span>
               <h2 class="text-3xl font-black text-white">تعلم الإنجليزية مع <span class="text-indigo-400">أستاذ قزمان</span></h2>
+              <p class="text-slate-400 text-xs max-w-lg mx-auto">منصة تعليمية متكاملة لطلاب المرحلة الثانوية لتأمين الدرجة النهائية بكل تفوق.</p>
             </div>
-            
+
+            {/* Student Portal */}
             <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-3">
               <h3 class="font-bold text-white text-base">📖 بوابة الطلاب</h3>
               <form onSubmit={e => { e.preventDefault(); const f = stus.find(s => s.id.toUpperCase() === sCode.trim().toUpperCase()); if(f) { setCurStu(f); setGrade(f.grade); setView('s-app'); setSErr(''); } else setSErr('الكود غير صحيح!'); }} class="space-y-3">
@@ -78,11 +82,32 @@ function App() {
               </form>
             </div>
 
-            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-3">
-              <h3 class="font-bold text-white text-base">🔒 لوحة المعلم</h3>
-              <p class="text-xs text-slate-400">إضافة المحتوى، رفع ملفات PDF، وتصميم الكويزات.</p>
-              <button onClick={() => setView('t-dash')} class="w-full bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 py-3 rounded-xl text-xs font-bold">دخول لوحة المعلم مباشرة ←</button>
+            {/* Who We Are & Features */}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-2">
+                <h4 class="font-bold text-indigo-300 text-sm">🌟 من نحن؟</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">منصة تعليمية متخصصة في تدريس اللغة الإنجليزية للمرحلة الثانوية تحت إشراف أستاذ قزمان، نهدف لتقديم محتوى احترافي يضمن التفوق الدراسي.</p>
+              </div>
+              <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-2">
+                <h4 class="font-bold text-emerald-400 text-sm">🚀 مميزاتنا</h4>
+                <ul class="text-xs text-slate-400 space-y-1 list-disc list-inside">
+                  <li>شروحات فيديو مبسطة وشاملة.</li>
+                  <li>ملفات PDF وملازم تدريبية حديثة.</li>
+                  <li>كويزات تفاعلية تصحح فورياً مع التوضيح.</li>
+                </ul>
+              </div>
             </div>
+          </div>
+        )}
+
+        {view === 't-login' && (
+          <div class="max-w-md mx-auto bg-slate-900 p-8 rounded-3xl border border-slate-800 space-y-4 my-10">
+            <h3 class="text-xl font-bold text-center">لوحة المعلم 🔒</h3>
+            <form onSubmit={e => { e.preventDefault(); if(tPass === 'andro11') { setView('t-dash'); setTErr(false); setTPass(''); } else setTErr(true); }} class="space-y-4">
+              <input type="password" value={tPass} onChange={e => setTPass(e.target.value)} placeholder="أدخل كود المرور السري" class="w-full p-3.5 bg-slate-950 border border-slate-800 rounded-xl text-center text-white"/>
+              {tErr && <p class="text-red-400 text-xs text-center font-bold">كود المرور غير صحيح!</p>}
+              <button type="submit" class="w-full bg-emerald-600 py-3 rounded-xl text-xs font-bold">تأكيد الدخول</button>
+            </form>
           </div>
         )}
 
